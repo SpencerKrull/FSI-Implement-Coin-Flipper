@@ -1,27 +1,57 @@
-// TODO: Declare any global variables we need
+true
+
+let headFlipCount = 0
+let tailFlipCount = 0
+
+let counts = {
+    heads: 0,
+    tails: 0
+}
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    // This is just a sanity check to make sure your JavaScript script is getting loaded
-    // You can remove it once you see it in your browser console in the developer tools
-    console.log('Hi')
+    function handleFlipResult(result) {
+        
+        counts[result]++
 
-    // TODO: Add event listener and handler for flip and clear buttons
+        let img = document.querySelector('img')
+        img.src = `assets/images/penny-${result}.jpg`
+        img.alt = `${result} face of a penny`
 
-    // Flip Button Click Handler
-        // TODO: Determine flip outcome
-        // TODO: Update image and status message in the DOM
+        document.querySelector('.message-container h3').textContent = `You flipped ${result}!`
 
-        // Update the scorboard
-        // TODO: Calculate the total number of rolls/flips
-        // Make variables to track the percentages of heads and tails
-        // TODO: Use the calculated total to calculate the percentages
-        // HINT: Make sure not to divide by 0! (if total is 0, percent will be 0 as well)
-        // TODO: Update the display of each table cell
+        document.querySelector(`#${result}`).textContent = counts[result]
+        let hPercent = Math.round(counts.heads/(counts.heads+counts.tails) * 100)
+        let tPercent = Math.round(counts.tails/(counts.heads+counts.tails) * 100)
+        document.querySelector('#heads-percent').textContent = `${hPercent}%`
+        document.querySelector('#tails-percent').textContent = `${tPercent}%`
+    }
 
+    function handleFlip(e) {
+        console.log("Flipping out")
+        let isHeads = Math.random() >= .5
 
-    // Clear Button Click Handler
-        // TODO: Reset global variables to 0
-        // TODO: Update the scoreboard (same logic as in flip button click handler)
+        if (isHeads) {
+            handleFlipResult('heads')
+    } else {
+        tailFlipCount++
+            handleFlipResult('tails')
+    }    
+}
 
+   function handleClear(e) {
+       console.log("Clear it out")
+       counts.heads = counts.tails = 0
+
+       document.querySelector('#heads').textContent = 0
+       document.querySelector('#tails').textContent = 0
+       document.querySelector('#heads-percent').textContent = '0%'
+       document.querySelector('#tails-percent').textContent = '0%'
+
+       document.querySelector('.message-container h3').textContent = "Let's Get Rolling!"
+   }
+
+   // Add event listeners
+   document.querySelector("#flip").addEventListener('click', handleFlip)
+   document.querySelector("#clear").addEventListener('click', handleClear)
 })
